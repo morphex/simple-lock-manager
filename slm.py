@@ -7,7 +7,7 @@ import glob
 #print(os.path.realpath(__file__))
 
 database = slm_config.get_database()
-database_lock_file = database + "slm_internal" + slm_config.lock_suffix
+database_lock_file = slm_utilities.generate_lock_filename("slm_internal")
 database_lock_file = pathlib.Path(database_lock_file)
 
 def setup():
@@ -29,7 +29,7 @@ def setup():
             stale_locks = glob.glob(database + "*" +
                                     slm_config.lock_suffix)
             DEBUG_PRINT(stale_locks)
-            stale_locks.remove(database + "slm_internal" + slm_config.lock_suffix)
+            stale_locks.remove(str(database_lock_file))
             slm_utilities.delete_lock("slm_internal")
             slm_utilities.write_lock("slm_internal")
             for lockfile in stale_locks:

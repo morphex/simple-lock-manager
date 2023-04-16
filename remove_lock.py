@@ -12,7 +12,7 @@ database = slm_config.get_database()
 def print_usage_info():
     print("Syntax Error.  Correct syntax is")
     print()
-    print(sys.argv[0], "<lock_name> [retries, default 0], [timeout, default 10.0 seconds]")
+    print(sys.argv[0], "<lock_name> [retries, default 0] [timeout, default 10.0 seconds]")
     print()
     print("retries is an integer, timeout a float")
     print()
@@ -27,7 +27,7 @@ def remove_lock(lock_name, retries=0, timeout=10.0):
         slm_utilities.delete_lock(lock_name)
         return 0
     except Exception as value:
-        DEBUG_PRINT("Exception", value)
+        DEBUG_PRINT("Exception", type(value), value)
         if retries > 0 or retries < 0:
             DEBUG_PRINT("Failed to remove lock: ", lock_name, "retrying", retries)
             time.sleep(timeout)
