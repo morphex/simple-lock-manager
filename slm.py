@@ -2,11 +2,12 @@
 
 import sys, os, slm_config, slm_utilities, pathlib, time
 from slm_utilities import DEBUG_PRINT
+import glob
 
 #print(os.path.realpath(__file__))
 
 database = slm_config.get_database()
-database_lock_file = database + "slm_internal" + ".lock"
+database_lock_file = database + "slm_internal" + slm_config.lock_suffix
 database_lock_file = pathlib.Path(database_lock_file)
 
 def setup():
@@ -24,5 +25,12 @@ def setup():
             DEBUG_PRINT(modified, uptime, time.time())
         else:
             DEBUG_PRINT("Stale internal lock file")
+            DEBUG_PRINT("Removing stale locks")
+            stale_locks = glob.glob(database + "*" +
+                                    slm_config.lock_suffix)
+            DEBUG_PRINT(stale_locks)
+            stale_locks.remove(database + "slm_internal" + slm_config.lock_suffix)
             slm_utilities.delete_lock("slm_internal")
             slm_utilities.write_lock("slm_internal")
+            for lockfile in stale_locks:
+                os.unlink(lockfile)
