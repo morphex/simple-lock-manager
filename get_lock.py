@@ -27,7 +27,7 @@ def get_lock(lock_name, retries=0, timeout=10.0):
         return 0
     except Exception as value:
         DEBUG_PRINT("Exception", value)
-        if retries > 0:
+        if retries > 0 or retries < 0:
             DEBUG_PRINT("Failed to get lock: ", lock_name, "retrying", retries)
             time.sleep(timeout)
             return get_lock(lock_name, retries=retries - 1, timeout=timeout)
